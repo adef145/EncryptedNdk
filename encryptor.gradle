@@ -1,0 +1,14 @@
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
+
+def algorithm = "AES/CBC/PKCS5Padding"
+def iv = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as byte[]
+def ivSpec = new IvParameterSpec(iv)
+
+ext.encrypt = { text, key ->
+    def cipher = Cipher.getInstance(algorithm)
+    cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key.bytes, "AES"), ivSpec)
+    def cipherText = cipher.doFinal(text.bytes)
+    return cipherText.encodeBase64()
+}
